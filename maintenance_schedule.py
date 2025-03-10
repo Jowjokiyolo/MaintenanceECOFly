@@ -15,14 +15,19 @@ def schedule_maintenance(tasks, num_years):
     days_in_year = 365  # Approximation, doesn't account for leap years perfectly.
     total_days = ((num_years * days_in_year) + 1)
     schedule = []
+    total_tasks = 0
 
     for day in range(10, total_days + 1, 10):  # Iterate every 10th day
         tasks_to_do = []
         for task_num, interval in tasks:
             if day % interval == 0:
                 tasks_to_do.append(task_num)
+                total_tasks += 1 # Adds 1 to total_tasks per added task
+
         if tasks_to_do:
             schedule.append((day, tasks_to_do))
+        
+    print("Total tasks in this 5 year plan is: ",total_tasks)
 
     return schedule
 
@@ -85,3 +90,4 @@ workbook.save("maintenance_schedule.xlsx")
 # Print the schedule to the console (optional)
 for day, tasks in maintenance_schedule:
     print(f"Day {day}: Tasks to do - {tasks}")
+
