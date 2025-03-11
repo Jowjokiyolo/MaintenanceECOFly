@@ -24,7 +24,7 @@ def schedule_maintenance(tasks, num_years):
     """
 
     days_in_year = 365  # Approximation, doesn't account for leap years perfectly.
-    total_days = ((num_years * days_in_year) + 1)
+    total_days = ((num_years * days_in_year) + 1) # Added 1 because of the leap day every 4 years
     schedule = []
     total_tasks = 0
 
