@@ -1,5 +1,16 @@
 import openpyxl
 
+# Load data from Excel
+def load_tasks_from_excel(filename):
+    """Loads task data from an Excel file."""
+    workbook = openpyxl.load_workbook(filename)
+    sheet = workbook.active
+    tasks = []
+    for row in sheet.iter_rows(min_row=2, values_only=True): # Starts from row 2 to avoid header
+        task_num, interval = row
+        tasks.append((task_num, interval))
+    return tasks
+
 def schedule_maintenance(tasks, num_years):
     """
     Calculates maintenance tasks scheduled for each 10th day over a specified number of years.
@@ -17,7 +28,7 @@ def schedule_maintenance(tasks, num_years):
     schedule = []
     total_tasks = 0
 
-    for day in range(10, total_days + 1, 10):  # Iterate every 10th day
+    for day in range(1, total_days + 1, 1):  # Iterate every 10th day
         tasks_to_do = []
         for task_num, interval in tasks:
             if day % interval == 0:
@@ -31,16 +42,6 @@ def schedule_maintenance(tasks, num_years):
 
     return schedule
 
-# Load data from Excel
-def load_tasks_from_excel(filename):
-    """Loads task data from an Excel file."""
-    workbook = openpyxl.load_workbook(filename)
-    sheet = workbook.active
-    tasks = []
-    for row in sheet.iter_rows(min_row=2, values_only=True): # Starts from row 2 to avoid header
-        task_num, interval = row
-        tasks.append((task_num, interval))
-    return tasks
 
 # Load tasks from Excel file
 maintenance_tasks = load_tasks_from_excel("sorted_maintenance_tasks.xlsx")
