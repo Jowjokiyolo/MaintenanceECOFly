@@ -7,9 +7,12 @@ def load_tasks_from_excel(filename):
     sheet = workbook.active
     tasks = []
     for row in sheet.iter_rows(min_row=2, values_only=True): # Starts from row 2 to avoid header
-        task_num, interval = row
-        tasks.append((task_num, interval))
+        task_num, interval, men, men_hours = row
+        tasks.append((task_num, interval, men, men_hours))
     return tasks
+
+# Load tasks from Excel file
+maintenance_tasks = load_tasks_from_excel("sorted_maintenance_tasks.xlsx")
 
 def schedule_maintenance(tasks, num_years):
     """
@@ -27,28 +30,31 @@ def schedule_maintenance(tasks, num_years):
     total_days = ((num_years * days_in_year) + 1) # Added 1 because of the leap day every 4 years
     schedule = []
     total_tasks = 0
+    time_required = 0
 
-    for day in range(1, total_days + 1, 1):  # Iterate every 10th day
+    for day in range(1, total_days + 1, 1):  # Run for every day in a 5 year range including 1 leap day
         tasks_to_do = []
-        for task_num, interval in tasks:
+        total_time_per_day = []
+        for task_num, interval, men, men_hours in tasks:
             if day % interval == 0:
+                time_required = time_required + (men * men_hours)
                 tasks_to_do.append(task_num)
                 total_tasks += 1 # Adds 1 to total_tasks per added task
-
+        total_time_per_day.append(time_required)
         if tasks_to_do:
-            schedule.append((day, tasks_to_do))
+            schedule.append((day, tasks_to_do, total_time_per_day))
+        time_required = 0
         
     print("Total tasks in this 5 year plan is: ",total_tasks)
 
     return schedule
 
-
-# Load tasks from Excel file
-maintenance_tasks = load_tasks_from_excel("sorted_maintenance_tasks.xlsx")
-
 # Makes a maintenance_schedule for the loaded tasks
 maintenance_schedule = schedule_maintenance(maintenance_tasks, 5)
 
+# Print the schedule to the console (optional)
+for day, tasks, maintenance_time in maintenance_schedule:
+    print(f"Day {day}: Tasks to do - {tasks}, requierd time - {maintenance_time}")
 
 """
 The following section takes the maintenance schedule and puts the tasks in excel
@@ -57,16 +63,11 @@ The following section takes the maintenance schedule and puts the tasks in excel
 # Create an Excel workbook
 workbook = openpyxl.Workbook()
 sheet = workbook.active
-sheet.append(["Day", "Tasks"])  # Header row
+sheet.append(["Day", "Maintenance Time", "Tasks" ])  # Header row
 
 # Write the schedule to the Excel sheet
-for day, tasks in maintenance_schedule:
-    sheet.append([day, ", ".join(map(str, tasks))]) # convert task list to comma seperated string
+for day, tasks, maintenance_time in maintenance_schedule:
+    sheet.append([day, str(maintenance_time), ", ".join(map(str, tasks))]) # convert task list to comma seperated string
 
 # Save the Excel file
 workbook.save("maintenance_schedule.xlsx")
-
-# Print the schedule to the console (optional)
-for day, tasks in maintenance_schedule:
-    print(f"Day {day}: Tasks to do - {tasks}")
-
