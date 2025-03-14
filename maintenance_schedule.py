@@ -40,7 +40,7 @@ def schedule_maintenance(tasks, num_years):
                 time_required = time_required + (men * men_hours)
                 tasks_to_do.append(task_num)
                 total_tasks += 1 # Adds 1 to total_tasks per added task
-        total_time_per_day.append(time_required)
+        total_time_per_day.append(round(time_required,1))
         if tasks_to_do:
             schedule.append((day, tasks_to_do, total_time_per_day))
         time_required = 0
