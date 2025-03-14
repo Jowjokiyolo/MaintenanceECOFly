@@ -1,5 +1,16 @@
 import openpyxl
 
+# Load data from Excel
+def load_tasks_from_excel(filename):
+    """Loads task data from an Excel file."""
+    workbook = openpyxl.load_workbook(filename)
+    sheet = workbook.active
+    tasks = []
+    for row in sheet.iter_rows(min_row=2, values_only=True): # Starts from row 2 to avoid header
+        task_num, interval = row
+        tasks.append((task_num, interval))
+    return tasks
+
 def schedule_maintenance(tasks, num_years):
     """
     Calculates maintenance tasks scheduled for each 10th day over a specified number of years.
@@ -13,62 +24,35 @@ def schedule_maintenance(tasks, num_years):
     """
 
     days_in_year = 365  # Approximation, doesn't account for leap years perfectly.
-    total_days = ((num_years * days_in_year) + 1)
+    total_days = ((num_years * days_in_year) + 1) # Added 1 because of the leap day every 4 years
     schedule = []
+    total_tasks = 0
 
-    for day in range(10, total_days + 1, 10):  # Iterate every 10th day
+    for day in range(1, total_days + 1, 1):  # Iterate every 10th day
         tasks_to_do = []
         for task_num, interval in tasks:
             if day % interval == 0:
                 tasks_to_do.append(task_num)
+                total_tasks += 1 # Adds 1 to total_tasks per added task
+
         if tasks_to_do:
             schedule.append((day, tasks_to_do))
+        
+    print("Total tasks in this 5 year plan is: ",total_tasks)
 
     return schedule
 
-# Example usage:
-maintenance_tasks = [
-    (1, 10),
-    (2, 20),
-    (3, 40),
-    (4, 40),
-    (5, 50),
-    (6, 50),
-    (7, 80),
-    (8, 120),
-    (9, 150),
-    (10, 200),
-    (11, 200),
-    (12, 250),
-    (13, 250),
-    (14, 300),
-    (15, 300),
-    (16, 300),
-    (17, 300),
-    (18, 300),
-    (19, 360),
-    (20, 400),
-    (21, 400),
-    (22, 400),
-    (23, 400),
-    (24, 400),
-    (25, 400),
-    (26, 500),
-    (27, 650),
-    (28, 830),
-    (29, 830),
-    (30, 1250),
-    (31, 1250),
-    (32, 1250),
-    (33, 1250),
-    (34, 1250),
-    (35, 1250),
-    (36, 1250),
-    (37, 1250),
-    (38, 1750),
-]
 
+# Load tasks from Excel file
+maintenance_tasks = load_tasks_from_excel("sorted_maintenance_tasks.xlsx")
+
+# Makes a maintenance_schedule for the loaded tasks
 maintenance_schedule = schedule_maintenance(maintenance_tasks, 5)
+
+
+"""
+The following section takes the maintenance schedule and puts the tasks in excel
+"""
 
 # Create an Excel workbook
 workbook = openpyxl.Workbook()
@@ -85,3 +69,4 @@ workbook.save("maintenance_schedule.xlsx")
 # Print the schedule to the console (optional)
 for day, tasks in maintenance_schedule:
     print(f"Day {day}: Tasks to do - {tasks}")
+
