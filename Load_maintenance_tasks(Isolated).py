@@ -32,7 +32,7 @@ def schedule_maintenance(tasks, num_years):
     total_tasks = 0
     time_required = 0
 
-    for day in range(1, total_days + 1, 1):  # Iterate every 10th day
+    for day in range(1, total_days + 1, 1):  # Run for every day in a 5 year range including 1 leap day
         tasks_to_do = []
         total_time_per_day = []
         for task_num, interval, men, men_hours in tasks:
