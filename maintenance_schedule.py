@@ -89,4 +89,4 @@ for day, tasks, maintenance_time, men, number_of_tasks, hangar_day in maintenanc
     sheet.append([day, number_of_tasks, hangar_day, str(maintenance_time), men, ", ".join(map(str, tasks))]) # convert task list to comma seperated string
 
 # Save the Excel file
-workbook.save("maintenance_schedule3.xlsx")
+workbook.save("maintenance_schedule4.xlsx")
