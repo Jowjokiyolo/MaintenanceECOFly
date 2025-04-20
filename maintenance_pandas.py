@@ -1,11 +1,13 @@
 import pandas as pd
+import numpy as np
 
-def load_excel(filepath: str):
-    data = pd.read_excel(filepath)
+def read_excel_to_df(filepath: str, size: int=None):          # Function to read a .xlsx file and transform it into a pandas DataFrame object.
+    
+    data = pd.read_excel(filepath, nrows=size)          # Pandas function to read file from an excel file.
 
-    headers = ['Task Number', 'Interval (Days)']
-    task_data = data[headers]
-    return task_data
+    return data
 
-SCHED = load_excel(r"sorted_maintenance_tasks.xlsx")
-print(SCHED)
+SCHED = read_excel_to_df(r".Files/MPD.xlsx")
+
+def structure_dataframe(data):
+    return "under construction"
