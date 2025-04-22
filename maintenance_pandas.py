@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def read_excel_to_df(filepath: str, size: int=None):        # Function to read a .xlsx file and transform it into a pandas DataFrame object.
     
@@ -17,46 +18,83 @@ def structure_dataframe(data, hours: int=13.5):
     for index, row in df.iterrows():
 
     # Convert interval variables into interval days    
-        interval = str(df.loc[index, 'Interval']).split() # Specific for 'Interval'
+        structured_interval = str(df.loc[index, 'Interval']).split() # Specific for 'Interval'
         
         # Check if Interval variable is DAILY/WEEKLY or any other literal string.
-        if len(interval) == 1:
-            if interval[0].upper() == "DAILY": interval = 1
+        if len(structured_interval) == 1:
+            if    structured_interval[0].upper() == "DAILY":  structured_interval = 1
 
-            elif interval[0].upper() == "WEEKLY": interval = 7
+            elif  structured_interval[0].upper() == "WEEKLY": structured_interval = 7
 
-            else: interval = None
+            else: structured_interval = None
 
-            df.at[index,'Interval'] = interval
+            df.at[index,'Interval'] = structured_interval
 
 
-        elif len(interval) > 1:
-            match interval[1].upper():
+        # Check if Interval variable is numerical
+        elif len(structured_interval) > 1:
+            match structured_interval[1].upper():
                 # Convert from Flight Hours (FH)
                 case "FH":
-                    interval = round(int(interval[0]) / hours)
+                    structured_interval = int(np.floor(int(structured_interval[0]) / hours))
 
                 # Convert from APU Hours (AH)
                 case "AH":
-                    interval = int(interval[0]) * 2
+                    structured_interval = int(structured_interval[0]) * 2
 
                 # Convert from Flight Cycles (FC)
                 case "FC":
-                    interval = int(interval[0])
+                    structured_interval = int(structured_interval[0])
 
                 # Convert from Months (MO)
                 case "MO":
-                    interval = round(int(interval[0]) * 365 / 12)
+                    structured_interval = int(np.floor(int(structured_interval[0]) * 365 / 12))
 
                 # Convert from Years (YR)
                 case "YR":
-                    interval = int(interval[0]) * 365
+                    structured_interval = int(structured_interval[0]) * 365
 
             # Append to DataFrame
-            df.at[index, 'Interval'] = interval
+            df.at[index, 'Interval'] = structured_interval
 
 
-    print(df['Interval'])
+
+        # Change Manhour string into an array
+        manhour = str(df.loc[index, 'M/H']).split()
+        structured_manhour = []
+        for manhour_value in manhour:
+
+            # Structure the Manhour array
+            value = float(manhour_value.replace('<','').replace(',',''))
+            structured_manhour.append(value)
+            df.at[index, 'M/H'] = structured_manhour
+
+
+
+        # Change Men string into an array
+        men = str(df.loc[index, 'Men']).split()
+        structured_men = []
+        for men_value in men:
+
+            # Structure no. Men array
+            value = int(men_value.replace(',',''))
+            structured_men.append(value)
+            df.at[index, 'Men'] = structured_men
+
+
+
+        # Change Effectivity string into an array
+        effectivity = str(df.loc[index, 'Effectivity']).split()
+        structured_effectivity = []
+        for effectivity_value in effectivity:
+
+            # Structure for the Effectivity array
+            value = effectivity_value.replace(',','')
+            structured_effectivity.append(value)
+            df.at[index,'Effectivity'] = structured_effectivity
+
+
+
+    return df
         
-
 structure_dataframe(SCHEDULE)
