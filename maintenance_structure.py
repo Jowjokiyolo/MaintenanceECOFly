@@ -1,24 +1,21 @@
 import pandas as pd
 import numpy as np
 
-def read_excel_to_df(filepath: str, size: int=None):        # Function to read a .xlsx file and transform it into a pandas DataFrame object.
+def read_excel_to_df(filepath: str, size: int=None) -> pd.DataFrame:        # Function to read a .xlsx file and transform it into a pandas DataFrame object.
     
-    df = pd.read_excel(filepath, nrows=size)                # Pandas function to read file from an excel file.
+    df = pd.read_excel(filepath, nrows=size)                                # Pandas function to read file from an excel file.
 
     return df
 
-SCHEDULE = read_excel_to_df(r".Files/MPD.xlsx", 10)
 
-def structure_dataframe(data, hours: int=13.5):
 
-    # Make argument 'data' a DataFrame Object
-    df = pd.DataFrame(data)
+def structure_dataframe(data: pd.DataFrame, hours: int=13.5) -> pd.DataFrame:
 
     # Access all rows of DataFrame Object
-    for index, row in df.iterrows():
+    for index, row in data.iterrows():
 
     # Convert interval variables into interval days    
-        structured_interval = str(df.loc[index, 'Interval']).split() # Specific for 'Interval'
+        structured_interval = str(data.loc[index, 'Interval']).split() # Specific for 'Interval'
         
         # Check if Interval variable is DAILY/WEEKLY or any other literal string.
         if len(structured_interval) == 1:
@@ -28,7 +25,8 @@ def structure_dataframe(data, hours: int=13.5):
 
             else: structured_interval = None
 
-            df.at[index,'Interval'] = structured_interval
+            data.at[index,'Interval'] = structured_interval
+
 
 
         # Check if Interval variable is numerical
@@ -55,46 +53,47 @@ def structure_dataframe(data, hours: int=13.5):
                     structured_interval = int(structured_interval[0]) * 365
 
             # Append to DataFrame
-            df.at[index, 'Interval'] = structured_interval
+            data.at[index, 'Interval'] = structured_interval
 
 
 
         # Change Manhour string into an array
-        manhour = str(df.loc[index, 'M/H']).split()
+        manhour = str(data.loc[index, 'M/H']).split()
         structured_manhour = []
         for manhour_value in manhour:
 
             # Structure the Manhour array
             value = float(manhour_value.replace('<','').replace(',',''))
             structured_manhour.append(value)
-            df.at[index, 'M/H'] = structured_manhour
+            data.at[index, 'M/H'] = structured_manhour
 
 
 
         # Change Men string into an array
-        men = str(df.loc[index, 'Men']).split()
+        men = str(data.loc[index, 'Men']).split()
         structured_men = []
         for men_value in men:
+            # Skip invalid or missing values
+            if men_value.lower() == 'nan':
+                continue
 
             # Structure no. Men array
-            value = int(men_value.replace(',',''))
+            value = int(men_value.replace(',', ''))
             structured_men.append(value)
-            df.at[index, 'Men'] = structured_men
+        data.at[index, 'Men'] = structured_men
 
 
 
         # Change Effectivity string into an array
-        effectivity = str(df.loc[index, 'Effectivity']).split()
+        effectivity = str(data.loc[index, 'Effectivity']).split()
         structured_effectivity = []
         for effectivity_value in effectivity:
 
             # Structure for the Effectivity array
             value = effectivity_value.replace(',','')
             structured_effectivity.append(value)
-            df.at[index,'Effectivity'] = structured_effectivity
+            data.at[index,'Effectivity'] = structured_effectivity
 
 
 
-    return df
-        
-structure_dataframe(SCHEDULE)
+    return data[['Task Number','Interval','Effectivity', 'Men', 'M/H']]
