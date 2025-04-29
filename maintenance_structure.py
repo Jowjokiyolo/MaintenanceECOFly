@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 
-def read_excel_to_df(filepath: str, size: int=None) -> pd.DataFrame:        # Function to read a .xlsx file and transform it into a pandas DataFrame object.
+def read_excel_to_df(excel_file_path: str, size: int=None) -> pd.DataFrame:        # Function to read a .xlsx file and transform it into a pandas DataFrame object.
     
-    df = pd.read_excel(filepath, nrows=size)                                # Pandas function to read file from an excel file.
+    raw_dataframe = pd.read_excel(excel_file_path, nrows=size)                                # Pandas function to read file from an excel file.
 
-    return df
+    return raw_dataframe
 
 
 
@@ -85,13 +85,12 @@ def structure_dataframe(data: pd.DataFrame, hours: int=13.5) -> pd.DataFrame:
 
 
         # Change Effectivity string into an array
-        effectivity = str(data.loc[index, 'Effectivity']).split()
+        effectivity = str(data.loc[index, 'Effectivity']).split(',')
         structured_effectivity = []
         for effectivity_value in effectivity:
 
             # Structure for the Effectivity array
-            value = effectivity_value.replace(',','')
-            structured_effectivity.append(value)
+            structured_effectivity.append(effectivity_value)
             data.at[index,'Effectivity'] = structured_effectivity
 
 
