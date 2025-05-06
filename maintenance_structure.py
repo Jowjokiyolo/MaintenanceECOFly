@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from filter_functions import filter_interval_notes
 
 def read_excel_to_df(excel_file_path: str, size: int=None) -> pd.DataFrame:        # Function to read a .xlsx file and transform it into a pandas DataFrame object.
     
@@ -22,6 +23,8 @@ def structure_dataframe(data: pd.DataFrame, hours: int=13.5) -> pd.DataFrame:
             if    structured_interval[0].upper() == "DAILY":  structured_interval = 1
 
             elif  structured_interval[0].upper() == "WEEKLY": structured_interval = 7
+
+            elif  structured_interval[0].upper() == "NOTE":   structured_interval = filter_interval_notes(row, index)
 
             else: structured_interval = None
 
@@ -51,6 +54,9 @@ def structure_dataframe(data: pd.DataFrame, hours: int=13.5) -> pd.DataFrame:
                 # Convert from Years (YR)
                 case "YR":
                     structured_interval = int(structured_interval[0]) * 365
+
+                case _:
+                    structured_interval = None
 
             # Append to DataFrame
             data.at[index, 'Interval'] = structured_interval
