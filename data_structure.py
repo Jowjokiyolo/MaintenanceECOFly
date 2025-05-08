@@ -2,14 +2,6 @@ import pandas as pd
 import numpy as np
 from filter_functions import filter_interval_notes
 
-def read_excel_to_df(excel_file_path: str, size: int=None) -> pd.DataFrame:        # Function to read a .xlsx file and transform it into a pandas DataFrame object.
-    
-    raw_dataframe = pd.read_excel(excel_file_path, nrows=size)                                # Pandas function to read file from an excel file.
-
-    return raw_dataframe
-
-
-
 def structure_dataframe(data: pd.DataFrame, hours: int=13.5) -> pd.DataFrame:
 
     # Access all rows of DataFrame Object

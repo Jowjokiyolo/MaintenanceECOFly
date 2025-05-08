@@ -12,5 +12,15 @@ def daily_tasks(data: pd.DataFrame, years=5):
             if pd.notna(interval) and day % interval == 0:
                 day_tasks.extend(group['Task Number'].tolist())
 
+        if day_tasks:
+            new_row = pd.DataFrame([{
+            'Day': day,
+            'Day Tasks': day_tasks
+            }])
+            maintenance_df = pd.concat([maintenance_df, new_row], ignore_index=True)
+
 
     return maintenance_df
+
+
+
