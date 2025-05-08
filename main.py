@@ -36,7 +36,8 @@ def main(argc, argv) -> None:
     structured_df  = data_structure.structure_dataframe(raw_df)
     filtered_df    = filter_functions.filter_ac(structured_df)
     maintenance_df = calculations.daily_tasks(filtered_df)
-    dataframe_to_file(maintenance_df)
+    full_df        = calculations.day_hours(filtered_df, maintenance_df)
+    dataframe_to_file(full_df)
 
 
 
