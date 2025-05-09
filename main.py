@@ -40,7 +40,8 @@ def main(argc, argv) -> None:
     filtered_df    = filter_functions.filter_ac(structured_df)
     maintenance_df = calculations.daily_tasks(filtered_df)
     full_df        = calculations.day_hours(filtered_df, maintenance_df)
-    dataframe_to_file(full_df)
+    look_ahead_df  = calculations.look_ahead(full_df)
+    dataframe_to_file(look_ahead_df)
 
 
 
