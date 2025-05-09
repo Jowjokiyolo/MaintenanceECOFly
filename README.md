@@ -17,5 +17,4 @@ Run main.py in your Python environment, with an argument to the (relative) direc
 > $ `<python> <path_to_main.py> <path_to_MPD.xlsx>`
 
 ## WIP:
-- Smarter Maintenance Plan
 - Maintenance Planning Chart
