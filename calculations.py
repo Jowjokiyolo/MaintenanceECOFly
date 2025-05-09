@@ -36,9 +36,7 @@ def day_hours(mpd: pd.DataFrame, daily_df: pd.DataFrame):
         if not day_tasks:
             continue
 
-
         day_task_data = mpd[mpd['Task Number'].isin(day_tasks)]
-
 
         merged_df.at[index, 'Day Men']   = day_task_data['Men'].sum() if 'Men' in day_task_data else 0
         merged_df.at[index, 'Day Hours'] = day_task_data['M/H'].sum() if 'M/H' in day_task_data else 0

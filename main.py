@@ -24,6 +24,9 @@ def main(argc, argv) -> None:
     if argc < 2:
         print("Please specify a file")
         return FileNotFoundError
+    elif argc != 2:
+        print("Unexpected Number of Arguments")
+        return ValueError
     file_path = argv[1]
 
     try: 

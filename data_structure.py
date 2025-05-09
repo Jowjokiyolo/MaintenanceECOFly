@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np
+import numpy  as np
 from filter_functions import filter_interval_notes
 
 def structure_dataframe(data: pd.DataFrame, hours: int=13.5) -> pd.DataFrame:
