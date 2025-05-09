@@ -14,7 +14,9 @@ Before you can run this program, you require the Fokker 70/100 MPD (.xlsx). It i
 Run main.py in your Python environment, with an argument to the (relative) directory of your MPD file. This generates a .csv file with a five-year maintenance plan.
 
 **main.py Syntax:**
-> $ `<python> <path_to_main.py> <path_to_MPD.xlsx>`
+```bash 
+<python> <path_to_main.py> <path_to_MPD.xlsx>
+```
 
 ## WIP:
 - Maintenance Planning Chart
