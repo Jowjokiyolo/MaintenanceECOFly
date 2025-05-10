@@ -3,6 +3,7 @@ import pandas as pd
 import filter_functions
 import calculations
 import data_structure
+from base import base_days
 
 
 
@@ -36,12 +37,13 @@ def main(argc, argv) -> None:
     except Exception as e: 
         print(f"Error reading file: {e}")
 
-    structured_df  = data_structure.structure_dataframe(raw_df)
-    filtered_df    = filter_functions.filter_ac(structured_df)
-    maintenance_df = calculations.daily_tasks(filtered_df)
-    full_df        = calculations.day_hours(filtered_df, maintenance_df)
-    look_ahead_df  = calculations.look_ahead(full_df)
-    dataframe_to_file(look_ahead_df)
+    structured_df        = data_structure.structure_dataframe(raw_df)
+    filtered_df          = filter_functions.filter_ac(structured_df)
+    maintenance_df       = calculations.daily_tasks(filtered_df)
+    full_df              = calculations.day_hours(filtered_df, maintenance_df)
+    look_ahead_df        = calculations.look_ahead(full_df)
+    final_base_dataframe = base_days(look_ahead_df)
+    dataframe_to_file(final_base_dataframe)
 
 
 
