@@ -35,10 +35,13 @@ else:
 if 'Days Required' not in data.columns:
     data['Days Required'] = 7  # Default to 1-week maintenance periods
 
-# Calculate start/end days for timeline
+# Filter data to only include first year
+data = data[data['Day'] <= 365]
+
+# Calculate start/end days for timeline - first year only
 min_day = 1
-max_day = data['Day'].max() if 'Day' in data and not data.empty else 365*5
-total_years = (max_day // 365) + 1
+max_day = 365  # Only show first year 
+total_years = 1
 
 # Create a figure with gridspec for header and main chart
 fig = plt.figure(figsize=(15, 6 + len(aircraft_list)*0.5))
@@ -49,8 +52,8 @@ plt.rcParams['font.family'] = 'monospace'  # Set all fonts to monospace for cons
 ax_years = plt.subplot(gs[0])
 ax_main = plt.subplot(gs[1])
 
-# Set up the years header
-years = [2025 + i for i in range(total_years)]  # Start from 2025
+# Set up the years header - only 2025
+years = [2025]  # Only show first year
 quarters = ['Q1', 'Q2', 'Q3', 'Q4']
 year_positions = []
 quarter_width = 365 / 4
@@ -78,7 +81,7 @@ for i, year in enumerate(years):
         ax_years.text(q_center, 0.3, quarters[q], ha='center', fontsize=8)
 
 # Remove year axis decorations
-ax_years.set_xlim(0, max_day + 30)
+ax_years.set_xlim(0, 365 + 30)  # First year + padding 
 ax_years.set_ylim(0, 1)
 ax_years.axis('off')
 
@@ -86,7 +89,7 @@ ax_years.axis('off')
 sorted_aircraft_list = ['PH-EFA'] + [ac for ac in aircraft_list if ac != 'PH-EFA']
 
 # Setup main chart
-ax_main.set_xlim(0, max_day + 30)
+ax_main.set_xlim(0, 365 + 30)  # First year + padding 
 ax_main.set_ylim(-0.5, len(sorted_aircraft_list) - 0.5)
 
 # Group aircraft by type (from registration)
@@ -126,7 +129,7 @@ for i, ac in enumerate(sorted_aircraft_list):
         for _, row in base_days.iterrows():
             day = row['Day']
             # Draw a vertical bar instead of horizontal to match the example
-            ax_main.bar(day, 0.8, bottom=y_pos-0.4, color='red', width=2, alpha=0.8, zorder=10)
+            ax_main.bar(day, 0.6, bottom=y_pos-0.3, color='red', width=1, alpha=0.8, zorder=10)
         
         # Keep these commented out as we're removing them from the legend
         # But we'll still draw them with reduced visibility for reference
@@ -149,7 +152,7 @@ ax_main.set_xlabel('Day')
 ax_main.set_yticks(range(len(sorted_aircraft_list)))
 ax_main.set_yticklabels(sorted_aircraft_list, fontfamily='monospace', fontsize=10)
 ax_main.tick_params(axis='y', which='major', pad=15)  # Add more padding to y-axis labels
-ax_main.set_title('Maintenance Gantt Chart')
+ax_main.set_title('Year 1 (2025) Maintenance Schedule')
 
 # Create legend with custom handles
 legend_elements = [
@@ -159,4 +162,4 @@ ax_main.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5,
 
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.15)  # Make room for the legend
-plt.savefig('gantt_chart.png', dpi=300)
+plt.savefig('gantt_chart_2025.png', dpi=300)
