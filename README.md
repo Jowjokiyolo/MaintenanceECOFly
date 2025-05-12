@@ -18,5 +18,5 @@ Run main.py in your Python environment, with an argument to the (relative) direc
 <python> <path_to_main.py> <path_to_MPD.xlsx>
 ```
 
-## WIP:
-- Maintenance Planning Chart
+## Maintenance Planning Chart
+This feature will not be completed. This is due to the AMP/*.csv files beeing very specific to our project.
