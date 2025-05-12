@@ -13,7 +13,7 @@ def daily_tasks(data: pd.DataFrame, years=5):
         for interval, group in interval_groups:
             if pd.notna(interval) and day % interval == 0:
                 day_tasks.extend(group['Task Number'].tolist())
-                if interval >= 365: base = True
+                if interval >= 18: base = True
 
         if day:
             new_row = pd.DataFrame([{
@@ -66,7 +66,7 @@ def look_ahead(data: pd.DataFrame):
             indices_to_process = []
 
             # Look ahead 365 days for other base maintenance
-            for days_ahead in range(365):
+            for days_ahead in range(18):
                 check_index = index + days_ahead
                 if check_index > max_index:
                     break
@@ -84,11 +84,11 @@ def look_ahead(data: pd.DataFrame):
             smart_df.at[index, 'Day Men'] = np.max(consolidated_men) if consolidated_men else 0
             smart_df.at[index, 'Day Hours'] = np.sum(consolidated_hours) if consolidated_hours else 0
 
-            # Clear maintenance from other days that were consolidated
             for clear_index in indices_to_process[1:]:  # Skip first index (that's our target day)
                 smart_df.at[clear_index, 'Day Tasks'] = []
                 smart_df.at[clear_index, 'Day Men'] = 0
                 smart_df.at[clear_index, 'Day Hours'] = 0
-                smart_df.at[clear_index, 'Base'] = False  # Set Base flag to False
+                smart_df.at[clear_index, 'Base'] = False
+
 
     return smart_df

@@ -42,8 +42,7 @@ def main(argc, argv) -> None:
     maintenance_df       = calculations.daily_tasks(filtered_df)
     full_df              = calculations.day_hours(filtered_df, maintenance_df)
     look_ahead_df        = calculations.look_ahead(full_df)
-    final_base_dataframe = base_days(look_ahead_df)
-    dataframe_to_file(final_base_dataframe)
+    dataframe_to_file(look_ahead_df)
 
 
 
